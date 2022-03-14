@@ -9,6 +9,8 @@ var courtField        = ml.getRange('E7');
 var lastTouchField    = ml.getRange('E8');
 var statusField       = ml.getRange('E9');
 
+var mlEntryRowStart = 12
+
 function addNewCase() {
   // get new case info
   var caseTitle    = caseTitleField.getValue();
@@ -27,7 +29,7 @@ function addNewCase() {
 
   // save new case
   var newCaseRow = getNewCaseRowNumber()
-  var caseID = newCaseRow-12+1
+  var caseID = newCaseRow-mlEntryRowStart+1
   ml.getRange("B".concat(newCaseRow.toString())).setValue(caseID)
   ml.getRange("C".concat(newCaseRow.toString())).setValue(caseTitle)
   ml.getRange("E".concat(newCaseRow.toString())).setValue(forType)
@@ -40,14 +42,26 @@ function addNewCase() {
 
   // create new case sheet
   var nc = createNewCaseSheet(caseID)
-  nc.getRange("D3").setValue(caseID)
-  nc.getRange("D4").setValue(caseTitle)
-  nc.getRange("D5").setValue(forType)
-  nc.getRange("D6").setValue(assignedBy)
-  nc.getRange("D7").setValue(dateAssigned)
-  nc.getRange("D8").setValue(court)
-  nc.getRange("D9").setValue(lastTouch)
-  nc.getRange("D10").setValue(status)
+
+  // set values
+  // nc.getRange("D3").setValue(caseID)
+  // nc.getRange("D4").setValue(caseTitle)
+  // nc.getRange("D5").setValue(forType)
+  // nc.getRange("D6").setValue(assignedBy)
+  // nc.getRange("D7").setValue(dateAssigned)
+  // nc.getRange("D8").setValue(court)
+  // nc.getRange("D9").setValue(lastTouch)
+  // nc.getRange("D10").setValue(status)
+  
+  // set values by mapping to master list
+  nc.getRange("D3").setValue("='Case Master List'!B".concat(newCaseRow.toString())) 
+  nc.getRange("D4").setValue("='Case Master List'!C".concat(newCaseRow.toString())) 
+  nc.getRange("D5").setValue("='Case Master List'!E".concat(newCaseRow.toString())) 
+  nc.getRange("D6").setValue("='Case Master List'!F".concat(newCaseRow.toString())) 
+  nc.getRange("D7").setValue("='Case Master List'!G".concat(newCaseRow.toString())) 
+  nc.getRange("D8").setValue("='Case Master List'!H".concat(newCaseRow.toString())) 
+  nc.getRange("D9").setValue("='Case Master List'!I".concat(newCaseRow.toString())) 
+  nc.getRange("D10").setValue("='Case Master List'!J".concat(newCaseRow.toString())) 
 
   var ncSheetLink = ml.getRange("K".concat(newCaseRow.toString()));
   var richValue = SpreadsheetApp.newRichTextValue()
@@ -76,7 +90,7 @@ function getSheetURL(sheet) {
 
 function getNewCaseRowNumber() {
   var row = 0;
-  var look = 12;
+  var look = mlEntryRowStart;
   var prevVal = "";
   while (row == 0) {
     val = ml.getRange("B".concat(look.toString())).getValue()
@@ -110,6 +124,7 @@ function createNewCaseSheet(caseID) {
 
   return nc
 }
+
 
 function goToCaseMasterList() {
   SpreadsheetApp.setActiveSheet(ml);
